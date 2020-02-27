@@ -38,20 +38,25 @@ One quirk right now is figuring out how to translate into iterators.
 let { GlobalInfrastructure } = require('./lib/index');
 let infra = new GlobalInfrastructure();
 
-async function iterate() {
-  let results = [];
+async function* allRegions() {
   let nextToken = undefined;
   do {
     let result = await infra.regions(nextToken);
-    result.regions.forEach(region => results.push(region));
     nextToken = result.nextToken;
+    for (let i = 0; i < result.regions.length; i++) {
+      yield result.regions[i];
+    }
   } while (typeof nextToken !== 'undefined');
-  return results;
 }
 
-iterate()
-  .then(allRegions => allRegions.map(region => region.id()))
-  .then(console.log);
+async function iterate() {
+  const regions = allRegions();
+  for await (const region of regions) {
+    console.log(region.id());
+  }
+}
+
+iterate();
 ```
 
 While this is totally possible, it's not an ideal way to iterate on
