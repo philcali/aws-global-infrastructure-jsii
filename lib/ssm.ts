@@ -1,12 +1,19 @@
 import * as AWS from 'aws-sdk';
 import { IParameterProvider, ParameterResult, Parameter } from './parameters';
 
-const ssm = new AWS.SSM();
+const MAX_RESULTS = 10;
 
 export class SSMParameterProvider implements IParameterProvider {
+
+  private ssm: AWS.SSM;
+
+  constructor(region?: string) {
+    this.ssm = new AWS.SSM({ region: region || 'us-east-1' });
+  }
+
   get(name: string): Promise<Parameter> {
     return new Promise((resolve, reject) => {
-      ssm.getParameter({ Name: name }, (error, data) => {
+      this.ssm.getParameter({ Name: name }, (error, data) => {
         if (error) {
           return reject(error);
         }
@@ -24,7 +31,7 @@ export class SSMParameterProvider implements IParameterProvider {
 
   list(path: string, previousToken?: string): Promise<ParameterResult> {
     return new Promise((resolve, reject) => {
-      ssm.getParametersByPath({ Path: path, NextToken: previousToken }, (error, data) => {
+      this.ssm.getParametersByPath({ Path: path, MaxResults: MAX_RESULTS, NextToken: previousToken }, (error, data) => {
         if (error) {
           return reject(error);
         }
