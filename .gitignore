@@ -1,0 +1,5 @@
+node_modules
+.jsii
+*.js
+tsconfig.json
+*.d.ts

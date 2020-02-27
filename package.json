@@ -1,0 +1,52 @@
+{
+  "name": "aws-global-infrastructure",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "keywords": [
+    "aws",
+    "infrastructure",
+    "ssm"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "jsii",
+    "build:watch": "jsii -w",
+    "package": "jsii-pacmak -v"
+  },
+  "jsii": {
+    "outdir": "dist",
+    "targets": {
+      "python": {
+        "distName": "me.philcali.aws-global-infrastructure",
+        "module": "me.philcali.aws_global_infrastructure"
+      },
+      "java": {
+        "package": "me.philcali.aws.global.infrastructure",
+        "maven": {
+          "groupId": "me.philcali",
+          "artifactId": "aws-global-infrastructure"
+        }
+      }
+    }
+  },
+  "author": {
+    "name": "Philip Cali"
+  },
+  "repository": {
+    "url": "https://github.com/philcali/aws-global-infrastructure-jsii.git"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.6",
+    "jsii": "^1.0.0",
+    "jsii-pacmak": "^1.0.0",
+    "lodash": "^4.17.15"
+  },
+  "bundledDependencies": [
+    "aws-sdk"
+  ],
+  "dependencies": {
+    "aws-sdk": "^2.626.0"
+  }
+}
