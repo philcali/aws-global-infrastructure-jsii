@@ -1,10 +1,11 @@
 import { IRegion, Region, IRegionProvider, RegionResult } from './regions';
+import { IService, Service, IServiceProvider, ServiceResult } from './services';
 import { IParameterProvider } from './parameters';
 import { SSMParameterProvider } from './ssm';
 
-const BASE_PATH = "/aws/service/global-infrastructure/";
+const BASE_PATH = "/aws/service/global-infrastructure";
 
-export class GlobalInfrastructure implements IRegionProvider {
+export class GlobalInfrastructure implements IRegionProvider, IServiceProvider {
   private parameters: IParameterProvider;
 
   constructor(parameters?: IParameterProvider) {
@@ -16,16 +17,28 @@ export class GlobalInfrastructure implements IRegionProvider {
   }
 
   public regions(previousToken?: string): Promise<RegionResult> {
-    return this.parameters.list(BASE_PATH + "regions", previousToken)
+    return this.parameters.list(BASE_PATH + "/regions", previousToken)
       .then(result => ({
-        regions: result.parameters.map(parameter => new Region(parameter, this.parameters)),
+        items: result.parameters.map(parameter => new Region(parameter, this.parameters)),
+        nextToken: result.nextToken
+      }));
+  }
+
+  public services(previousToken?: string): Promise<ServiceResult> {
+    return this.parameters.list(BASE_PATH + "/services", previousToken)
+      .then(result => ({
+        items: result.parameters.map(parameter => new Service(parameter, this.parameters)),
         nextToken: result.nextToken
       }));
   }
 
   public region(regionId: string): Promise<IRegion> {
-    let path = [ BASE_PATH, "regions", regionId ].join('/');
-    return this.parameters.get(path)
+    return this.parameters.get([ BASE_PATH, "regions", regionId ].join('/'))
       .then(parameter => new Region(parameter, this.parameters));
+  }
+
+  public service(serviceId: string): Promise<IService> {
+    return this.parameters.get([ BASE_PATH, "services", serviceId].join('/'))
+      .then(parameter => new Service(parameter, this.parameters));
   }
 }

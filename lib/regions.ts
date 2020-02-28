@@ -1,8 +1,8 @@
-import { Parameter, IParameterProvider } from './parameters';
+import { Parameter, IParameterProvider, ReflectiveFieldParameter } from './parameters';
+import { PagedResult } from './api';
 
-export interface RegionResult {
-  readonly regions: Array<IRegion>;
-  readonly nextToken: string | undefined;
+export interface RegionResult extends PagedResult {
+  readonly items: Array<IRegion>;
 }
 
 export interface IRegionProvider {
@@ -19,22 +19,10 @@ export interface IRegion {
   geolocationCountry(): Promise<string>;
 }
 
-export class Region implements IRegion {
-  private parameter: Parameter
-  private parameters: IParameterProvider
+export class Region extends ReflectiveFieldParameter implements IRegion {
 
   constructor(parameter: Parameter, parameters: IParameterProvider) {
-    this.parameter = parameter;
-    this.parameters = parameters;
-  }
-
-  private extractField(field: string) {
-    return this.parameters.get(this.parameter.name + '/' + field)
-      .then(paramter => paramter.value);
-  }
-
-  id() {
-    return this.parameter.value;
+    super(parameter, parameters);
   }
 
   longName() {

@@ -12,6 +12,7 @@ __JavaScript__
 ``` javascript
 let infra = new GlobalInfrastructure();
 let result = infra.regions();
+let services = infra.services();
 ```
 
 __Java__
@@ -20,6 +21,7 @@ import me.philcali.aws.global.infrastructure.GlobalInfrastructure;
 
 var infra = new GlobalInfrastructure();
 infra.regions();
+infra.services();
 ```
 
 __Python__
@@ -28,6 +30,7 @@ import GlobalInfrastructure from me.philcali.aws_global_infrastructure
 
 infra = new GlobalInfrastructure()
 infra.regions()
+infra.services()
 ```
 
 ## Iteration
