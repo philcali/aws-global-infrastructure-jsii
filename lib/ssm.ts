@@ -35,14 +35,14 @@ export class SSMParameterProvider implements IParameterProvider {
         if (error) {
           return reject(error);
         }
-        let parameters: Array<Parameter> = [];
+        let items: Array<Parameter> = [];
         let nextToken: string | undefined = data.NextToken;
         if (data && data.Parameters) {
-          parameters = data.Parameters
+          items = data.Parameters
             .filter(p => p.Name && p.Value)
             .map(p => ({ name: p.Name || '', value: p.Value || ''}));
         }
-        return resolve({ parameters, nextToken });
+        return resolve({ items, nextToken });
       });
     });
   }

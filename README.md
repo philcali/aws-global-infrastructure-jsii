@@ -11,7 +11,7 @@ We'll see how this goes...
 __JavaScript__
 ``` javascript
 let infra = new GlobalInfrastructure();
-let result = infra.regions();
+let regions = infra.regions();
 let services = infra.services();
 ```
 
@@ -41,25 +41,47 @@ One quirk right now is figuring out how to translate into iterators.
 let { GlobalInfrastructure } = require('./lib/index');
 let infra = new GlobalInfrastructure();
 
-async function* allRegions() {
+async function* all(thunk) {
   let nextToken = undefined;
   do {
-    let result = await infra.regions(nextToken);
+    let result = await thunk(nextToken);
     nextToken = result.nextToken;
-    for (let i = 0; i < result.regions.length; i++) {
-      yield result.regions[i];
+    for (let i = 0; i < result.items.length; i++) {
+      yield result.items[i];
     }
   } while (typeof nextToken !== 'undefined');
 }
 
-async function iterate() {
-  const regions = allRegions();
+async function iterateOnRegions() {
+  const regions = all(infra.regions.bind(infra));
   for await (const region of regions) {
-    console.log(region.id());
+    const services = all(region.services.bind(region));
+    let serviceList = [];
+    for await (const service of services) {
+      serviceList.push(service);
+    }
+    console.log(`Found ${serviceList.length} services in ${region.id()}`);
   }
 }
 
-iterate();
+async function iterateOnServices() {
+  let limit = 10;
+  const services = all(infra.services.bind(infra));
+  for await (const service of services) {
+    if (--limit == 0) {
+      break;
+    }
+    const regions = all(service.regions.bind(service));
+    let regionList = [];
+    for await (const region of regions) {
+      regionList.push(region);
+    }
+    console.log(`Found ${service.id()} is found in ${regionList.length} regions`);
+  }
+}
+
+iterateOnRegions();
+iterateOnServices();
 ```
 
 While this is totally possible, it's not an ideal way to iterate on

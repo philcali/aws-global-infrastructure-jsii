@@ -19,7 +19,7 @@ export class GlobalInfrastructure implements IRegionProvider, IServiceProvider {
   public regions(previousToken?: string): Promise<RegionResult> {
     return this.parameters.list(BASE_PATH + "/regions", previousToken)
       .then(result => ({
-        items: result.parameters.map(parameter => new Region(parameter, this.parameters)),
+        items: result.items.map(parameter => new Region(parameter, this.parameters)),
         nextToken: result.nextToken
       }));
   }
@@ -27,7 +27,7 @@ export class GlobalInfrastructure implements IRegionProvider, IServiceProvider {
   public services(previousToken?: string): Promise<ServiceResult> {
     return this.parameters.list(BASE_PATH + "/services", previousToken)
       .then(result => ({
-        items: result.parameters.map(parameter => new Service(parameter, this.parameters)),
+        items: result.items.map(parameter => new Service(parameter, this.parameters)),
         nextToken: result.nextToken
       }));
   }

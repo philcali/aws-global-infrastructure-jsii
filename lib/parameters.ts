@@ -1,7 +1,7 @@
 import { PagedResult } from './api';
 
 export interface ParameterResult extends PagedResult {
-  readonly parameters: Array<Parameter>;
+  readonly items: Array<Parameter>;
 }
 
 export interface Parameter {
