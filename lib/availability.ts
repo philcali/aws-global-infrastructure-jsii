@@ -2,6 +2,7 @@ import { Parameter, IParameterProvider } from './parameters';
 import { PagedResult } from './api';
 import { IRegion, Region } from './regions';
 import { IService, Service } from './services';
+import { IReachability, Reachability } from './reachability';
 
 export interface RegionAvailabilityResult extends PagedResult {
   readonly items: Array<IRegionAvailability>;
@@ -10,6 +11,7 @@ export interface RegionAvailabilityResult extends PagedResult {
 export interface IRegionAvailability {
   service(): IService;
   region(): IRegion;
+  reachability(): IReachability;
 }
 
 export class RegionAvailability implements IRegionAvailability {
@@ -39,5 +41,9 @@ export class RegionAvailability implements IRegionAvailability {
       value: this.regionId
     };
     return new Region(parameter, this.parameters);
+  }
+
+  public reachability(): IReachability {
+    return new Reachability(this.parameters, this.basePath, this);
   }
 }

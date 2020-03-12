@@ -5,3 +5,4 @@ export * from './availability';
 export * from './ssm';
 export * from './provider';
 export * from './api';
+export * from './reachability';
