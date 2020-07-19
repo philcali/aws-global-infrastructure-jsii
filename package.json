@@ -41,7 +41,7 @@
     "@types/node": "^13.7.6",
     "jsii": "^1.0.0",
     "jsii-pacmak": "^1.0.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.19"
   },
   "bundledDependencies": [
     "aws-sdk"
